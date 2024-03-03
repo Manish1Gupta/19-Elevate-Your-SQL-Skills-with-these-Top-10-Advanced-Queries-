@@ -1,0 +1,97 @@
+🚀 Elevate Your SQL Skills with these Top 10 Advanced Queries! 🚀
+
+1️⃣ Subqueries
+Subqueries allow us to nest one query inside another, enabling more complex data retrieval and filtering.
+
+Example:
+SELECT *
+FROM employees
+WHERE department_id IN (SELECT department_id FROM departments WHERE location_id = 1700);
+
+2️⃣ Joins
+SQL joins combine rows from two or more tables based on a related column between them.
+
+Example:
+SELECT e.employee_id, e.first_name, e.last_name, d.department_name
+FROM employees e
+JOIN departments d ON e.department_id = d.department_id;
+
+3️⃣ Aggregate Functions
+Aggregate functions perform calculations on a set of values and return a single value.
+
+Example:
+SELECT AVG(salary) AS avg_salary
+
+4️⃣ Common Table Expressions (CTEs)
+CTEs are temporary result sets that can be referenced within a SELECT, INSERT, UPDATE, or DELETE statement.
+
+Example:
+WITH high_salary_employees AS (
+SELECT *
+FROM employees
+WHERE salary > 100000
+)
+SELECT * FROM high_salary_employees;
+
+5️⃣ Recursive Common Table Expressions (CTE)
+Query: Retrieve all employees and their managers in a hierarchical structure using a recursive CTE.
+
+Example:
+WITH RECURSIVE EmployeeHierarchy AS (
+SELECT employee_id, employee_name, manager_id
+FROM employees
+WHERE manager_id IS NULL
+UNION ALL
+SELECT e.employee_id, e.employee_name, e.manager_id
+FROM employees e
+JOIN EmployeeHierarchy eh ON e.manager_id = eh.employee_id
+)
+SELECT * FROM EmployeeHierarchy;
+
+6️⃣ Pivot Data
+Query: Pivot the sales table to display product categories as columns and the total sales for each month.
+
+Example:
+SELECT *
+FROM (
+SELECT TO_CHAR(order_date, 'YYYY-MM') AS month, product_category, sales_amount
+FROM sales
+) AS pivoted
+PIVOT (
+SUM(sales_amount)
+FOR product_category IN ('Electronics', 'Clothing', 'Books')
+) AS pivoted_sales;
+
+7️⃣ Unpivot tables transform column-wise data into row-wise data.
+
+Example:
+SELECT employee_id, department, salary
+FROM employees
+UNPIVOT (salary FOR department IN (IT, HR, Sales));
+
+8️⃣ Window Functions
+Query: Calculate the running total of sales by order date.
+
+Example:
+SELECT order_date, sales_amount, SUM(sales_amount) OVER (ORDER BY order_date) AS running_total
+FROM sales
+
+9️⃣ Ranking with Window Functions
+Query: Rank employees by their salary within each department.
+
+Example:
+SELECT department, employee_name, salary,
+RANK() OVER (PARTITION BY department ORDER BY salary DESC) AS salary_rank
+FROM employees;
+
+🔟 Conditional Aggregation:
+Conditional aggregation calculates aggregates based on a specified condition.
+
+Example:
+SELECT department_id,
+COUNT(*) AS total_employees,
+COUNT(CASE WHEN salary > 50000 THEN 1 END) AS high_salary_employees
+FROM employees
+GROUP BY department_id;
+
+Elevate your SQL game with these advanced queries!
